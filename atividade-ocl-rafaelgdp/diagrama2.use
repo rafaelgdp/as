@@ -1,0 +1,18 @@
+model Diagrama2
+
+-- Aluno: Rafael Guerra de Pontes
+
+-- Definição de classes
+
+class Artista
+attributes
+    nome:String
+    biografia:String
+operations
+    totalVisualizacoes():Integer
+
+class Album
+attributes
+    nome:String
+    tipo:TipoAlbum
+
