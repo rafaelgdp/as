@@ -1,0 +1,108 @@
+model Diagrama1
+
+-- Aluno: Rafael Guerra de Pontes
+
+-- Definição de classes
+
+class Conversa
+attributes
+    -- Não possui atributos simples
+operations
+    listarUsuarios():Set(String) = self.usuarios.nome->asSet()
+end -- Fim da classe
+
+class Usuario
+attributes
+    nome:String
+    telefone:String
+    criadoEm:DataHora
+    dataNascimento:Data
+operations
+    mensagensEnviadas():Set(Mensagem) = self.conversas.mensagens->asSet()
+end
+
+class Mensagem
+attributes
+    texto:String
+    horaEnvio:DataHora
+    chegouServidor:Boolean
+operations
+end
+
+class DataHora
+attributes
+    data:Data
+    hora:Horario
+operations
+    equals(dh:DataHora):Boolean
+end
+
+class Horario
+attributes
+    segundo:Integer
+    minuto:Integer
+    hora:Integer
+operations
+    equals(h:Horario):Boolean
+end
+
+class Data
+attributes
+    dia:Integer
+    mes:Integer
+    ano:Integer
+operations
+    equals(d:Data):Boolean
+end
+
+class Grupo < Usuario
+attributes
+operations
+end
+
+
+-- Associações
+
+association chatPrivado between
+    Conversa[*] role conversas
+    Usuario[2] role usuarios
+end
+
+association chatGrupo between
+    Usuario[1..256] role usuarios
+    Grupo[*] role grupos
+end
+
+
+association adminsGrupo between
+    Usuario[1..256] role usuariosAdministradores
+    Grupo[*] role gruposAdministrados
+end
+
+association mensagensConversa between
+    Conversa[1] role conversa
+    Mensagem[*] role mensagens
+end
+
+constraints
+
+context Horario
+    inv: self.segundo >= 0 and self.segundo <= 59
+    inv: self.minuto >= 0 and self.minuto <= 59
+    inv: self.hora >= 1 and self.hora <= 23
+
+context Data
+    inv: self.dia >= 0 and self.dia <= 31
+    inv: self.mes >= 1 and self.mes <= 12
+    inv: self.ano >= 2000
+
+context Conversa
+    inv: self.usuarios->isUnique(s | s)
+
+context Mensagem
+    inv: self.texto <> ''
+
+context Grupo
+    inv: self.usuariosAdministradores->size() >= 1
+    inv: self.usuarios->includesAll(self.usuariosAdministradores)
+    inv: self.usuariosAdministradores->size() <= self.usuarios->size()
