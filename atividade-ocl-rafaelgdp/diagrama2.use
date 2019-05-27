@@ -65,7 +65,7 @@ attributes
     ehPublica:Boolean
     ehColaborativa:Boolean
 operations
-    calculaTempo():Tempo
+    calculaTempo():Tempo = self.musicas.duracao->sum()
     numeroDeMusica():Integer
 end
 
@@ -87,7 +87,7 @@ association albunsDiscos between
     Disco[*] role discos
 end
 
-association discosMusicas between
+association discoMusicas between
     Disco[1] role disco
     Musica[*] role musicas
 end
@@ -99,5 +99,49 @@ end
 
 association singleArtistas between
     Single[*] role singles
-    
+    Artista[*] role artistas
 end
+
+association artistasEPs between
+    Artista[*] role artistas
+    EP[*] role eps
+end
+
+association EPsMusicas between
+    EP[0..1] role ep
+    Musica[3..6] role musicas
+end
+
+association musicasPlaylists between
+    Musica[*] role musicas
+    Playlist[*] role playlists
+end
+
+association playlistsUsuarios between
+    Playlist[*] role playlists
+    Usuario[1] role donoPlaylist
+end
+
+constraints
+
+context Artista
+    inv: self.albuns->isUnique(a:Album | a)
+
+context Album
+    inv: self.discos->isUnique(d:Disco | d.numDisco)
+
+context EP
+    inv: self.musicas->size() >= 3 and self.musicas->size() <= 6
+
+context Single
+    inv: self.musicas->size() >= 1 and self.musicas->size() <= 3
+
+context Album
+    inv: self.musicas->size() >= 8
+
+context Musica
+    inv: dias >= 0
+    inv: horas >= 0
+    inv: minutos >= 0
+    inv: segundos >= 0
+    inv: (dias + horas + minutos + segundos) > 0
