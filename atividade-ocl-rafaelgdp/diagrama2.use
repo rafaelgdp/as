@@ -10,9 +10,94 @@ attributes
     biografia:String
 operations
     totalVisualizacoes():Integer
+end
 
 class Album
 attributes
     nome:String
     tipo:TipoAlbum
+operations
+    totalVisualizacoes():Integer
+end
 
+class Disco
+attributes
+    numDisco:Integer
+operations
+    duracaoTotal():Tempo
+end
+
+class Musica
+attributes
+    titulo:String
+    duracao:Tempo
+    visualizacoes:Integer
+operations
+    ouvir()
+end
+
+class EP
+attributes
+    nome:String
+operations
+    totalVisualizacoes():Integer
+end
+
+class Tempo
+attributes
+    dias:Integer
+    horas:Integer
+    minutos:Integer
+    segundos:Integer
+end
+
+class Single
+attributes
+    nome:String
+operations
+    duracaoTotal():Tempo
+    totalVisualizacoes():Integer
+end
+
+class Playlist
+attributes
+    descricao:String
+    ehPublica:Boolean
+    ehColaborativa:Boolean
+operations
+    calculaTempo():Tempo
+    numeroDeMusica():Integer
+end
+
+class Usuario
+attributes
+    nome:String
+    email:String
+end
+
+enum TipoAlbum {ESTUDIO, AO_VIVO, SOLO, COVER}
+
+association artistasAlbuns between
+    Artista[*] role artistas
+    Album[*] role albuns
+end
+
+association albunsDiscos between
+    Album[1] role album
+    Disco[*] role discos
+end
+
+association discosMusicas between
+    Disco[1] role disco
+    Musica[*] role musicas
+end
+
+association musicasSingle between
+    Musica[1..3] role musicas
+    Single[1] role single
+end
+
+association singleArtistas between
+    Single[*] role singles
+    
+end
