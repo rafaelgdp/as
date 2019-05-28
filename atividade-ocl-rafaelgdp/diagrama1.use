@@ -1,6 +1,7 @@
 model Diagrama1
 
 -- Aluno: Rafael Guerra de Pontes
+-- Matrícula: 118110377
 
 -- Definição de classes
 
@@ -55,7 +56,7 @@ operations
     equals(d:Data):Boolean
 end
 
-class Grupo < Usuario
+class Grupo < Conversa
 attributes
 operations
 end
@@ -68,13 +69,13 @@ association chatPrivado between
     Usuario[2] role usuarios
 end
 
-association chatGrupo between
-    Usuario[1..256] role usuarios
+association usuariosGrupos between
+    Usuario[1..256] role usuariosGrupos
     Grupo[*] role grupos
 end
 
 
-association adminsGrupo between
+association adminsGrupos between
     Usuario[1..256] role usuariosAdministradores
     Grupo[*] role gruposAdministrados
 end
